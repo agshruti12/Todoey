@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import ChameleonFramework
 
 class CategoryViewController: SwipeTableViewController {
 
@@ -37,6 +38,10 @@ class CategoryViewController: SwipeTableViewController {
         
         // Configure the cell’s contents.
         cell.textLabel!.text = category.name
+        
+//        if category.colorHex != nil  {
+//            cell.backgroundColor = UIColor(hexString: category.colorHex!)
+//        }
         
         return cell
     }
@@ -77,6 +82,7 @@ class CategoryViewController: SwipeTableViewController {
             
             let newCategory = Category(context: self.context)
             newCategory.name = textField.text!
+            //newCategory.colorHex = UIColor(randomFlatColorOf:.light).hexValue()
             
             self.categoryArray.append(newCategory)
             
