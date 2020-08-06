@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ToDoListViewController: UITableViewController {
+class ToDoListViewController: SwipeTableViewController {
 
     var itemArray:[Item] = [Item]()
     var selectedCategory:Category? {
@@ -28,6 +28,8 @@ class ToDoListViewController: UITableViewController {
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         loadItems()
+        
+        tableView.rowHeight = 80.0
  
     }
 
@@ -39,13 +41,12 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Fetch a cell of the appropriate type.
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         let item = itemArray[indexPath.row]
         
         // Configure the cell’s contents.
         cell.textLabel!.text = item.title
-        
         cell.accessoryType = item.checked ? .checkmark : .none
         
         return cell
@@ -145,6 +146,19 @@ class ToDoListViewController: UITableViewController {
         
         self.tableView.reloadData()
 
+    }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        let item = self.itemArray[indexPath.row]
+        self.context.delete(item)
+        self.itemArray.remove(at: indexPath.row)
+        
+        //self.saveItems()
+        do {
+            try self.context.save()
+        } catch {
+            print ("error saving context \(error)")
+        }
     }
     
     
